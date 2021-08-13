@@ -1,0 +1,925 @@
+/*-------------------------------------------
+全体の設定
+-------------------------------------------*/
+* {
+  margin: 0;
+  padding: 0;
+}
+
+*,
+:after,
+:before {
+  background-repeat: no-repeat;
+  // ▼親要素の値を継承する
+  // 参考：https://jajaaan.co.jp/web-production/frontend/box-sizing/
+  box-sizing: inherit;
+}
+
+html {
+  box-sizing: border-box;
+  // ▼デフォルトを10pxにする
+  // 参考：https://jajaaan.co.jp/css/font-size-rem/
+  font-size: 62.5%;
+}
+
+body {
+  color: #333;
+  font-size: 1.4rem;
+  color: #333;
+  font-family: "游ゴシック体", "YuGothic", "游ゴシック Medium",
+    "Yu Gothic Medium", "游ゴシック", "Yu Gothic", "メイリオ", sans-serif;
+  letter-spacing: 0.1em;
+}
+
+// ▼レスポンシブ時の右側の余白を消す
+// 参考：https://aya2kiku.com/htmlcss_space/
+.wrap {
+  overflow: hidden;
+}
+
+/*-------------------------------------------
+共通
+-------------------------------------------*/
+.wrapper {
+  width: 100%;
+  max-width: 860px;
+  margin: 0 auto;
+
+  @media screen and (max-width: 900px) {
+    padding: 0 16px;
+  }
+}
+
+li {
+  list-style: none;
+}
+
+a {
+  text-decoration: none;
+  display: inline-block;
+}
+
+img {
+  max-width: 100%;
+  vertical-align: bottom;
+}
+
+p {
+  font-size: 1.6rem;
+  font-weight: normal;
+  text-align: justify;
+}
+
+.sec-title {
+  font-size: 3.6rem;
+  font-weight: bold;
+  display: inline-block;
+  position: relative;
+  margin-bottom: 100px;
+
+  // ▼文字の下に短い線
+  // 参考：https://namagomi-days.com/border-length/
+  &:after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: -15px; /*下線の上下位置調整*/
+    display: inline-block;
+    width: 100px; /*下線の幅*/
+    height: 3px; /*下線の太さ*/
+    transform: translate(-50%); /*位置調整*/
+    background-color: #333; /*下線の色*/
+  }
+}
+
+/*-------------------------------------------
+ヘッダー
+-------------------------------------------*/
+#header {
+  padding: 40px 0 0 50px;
+  height: 100px;
+  width: 100%;
+
+  @media screen and (max-width: 900px) {
+    padding: 25px 0 0 25px;
+  }
+
+  .site-title {
+    width: 100px;
+    line-height: 1px;
+
+    a {
+      display: block;
+    }
+  }
+}
+
+// ▼ハンバーガーメニュー
+// JS適用させる為、ヘッダーの入れ子にしない
+.hamburger {
+  width: 100px;
+  height: 100px;
+  background-color: #ff2a2a;
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 30;
+  cursor: pointer;
+  transition: 0.3s;
+
+  @media screen and (max-width: 900px) {
+    width: 75px;
+    height: 75px;
+  }
+
+  &:hover {
+    opacity: 0.7;
+  }
+
+  // ▼ハンバーガーメニューの線の設定（メニューが閉じている時）
+  span {
+    width: 50px;
+    height: 2px;
+    background: #fff;
+    position: absolute;
+    left: 25px;
+    transition: 0.3s ease-in-out;
+
+    @media screen and (max-width: 900px) {
+      width: 35px;
+      left: 21px;
+    }
+
+    // ▼1本目の線の位置
+    &:nth-child(1) {
+      top: 36px;
+
+      @media screen and (max-width: 900px) {
+        top: 26px;
+      }
+    }
+
+    // ▼2本目の線の位置
+    &:nth-child(2) {
+      top: 50px;
+
+      @media screen and (max-width: 900px) {
+        top: 37px;
+      }
+    }
+
+    // ▼3本目の線の位置
+    &:nth-child(3) {
+      top: 64px;
+
+      @media screen and (max-width: 900px) {
+        top: 48px;
+      }
+    }
+  }
+}
+
+// ▼ハンバーガーメニューの線の設定（メニューが開いている時）
+// 1本目の線を-45度回転
+.hamburger.active span {
+  &:nth-child(1) {
+    top: 47px;
+    left: 25px;
+    background: #fff;
+    transform: rotate(-45deg);
+
+    @media screen and (max-width: 900px) {
+      top: 37px;
+      left: 21px;
+    }
+  }
+
+  // ▼2本目と3本目は重ねて45度回転
+  &:nth-child(2),
+  &:nth-child(3) {
+    top: 47px;
+    background: #fff;
+    transform: rotate(45deg);
+
+    @media screen and (max-width: 900px) {
+      top: 37px;
+    }
+  }
+}
+
+// ▼ハンバーガーメニューがクリックされた際に、jQueryで#naviに
+// activeクラスを追加して、メニューを表示させる。
+// JS適用させる為、入れ子にしない
+#navi.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+// ▼メニューの設定
+// 最初は閉じている状態なので、「opacity: 0;」「visibility: hidden;」
+// で要素を非表示にしておく
+#navi {
+  width: 100%;
+  height: 100vh;
+  background-color: #ff2a2a;
+  color: #fff;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 20;
+  opacity: 0;
+  text-align: center;
+  transition: opacity 0.6s ease, visibility 0.6s ease;
+  visibility: hidden;
+
+  .logo {
+    width: 100px;
+    position: absolute;
+    top: 40px;
+    left: 50px;
+
+    @media screen and (max-width: 900px) {
+      top: 25px;
+      left: 25px;
+    }
+  }
+
+  ul {
+    margin: 80px 0 40px 0;
+
+    @media screen and (max-width: 900px) {
+      margin-top: 110px;
+    }
+  }
+
+  li {
+    margin-bottom: 20px;
+
+    a {
+      color: #fff;
+      font-weight: bold;
+      font-size: 1.6rem;
+    }
+  }
+
+  .btn {
+    width: 250px;
+    border: solid 1px #fff;
+    color: #fff;
+    display: block;
+    font-size: 1.6rem;
+    font-weight: bold;
+    padding: 15px 0;
+    margin: 0 auto;
+    position: relative;
+    transition: 0.3s ease-in-out;
+
+    // ▼ボタンの右と下の線は疑似要素で設定
+    &:after {
+      content: "　";
+      width: 250px;
+      border-right: solid 1px #fff;
+      border-bottom: solid 1px #fff;
+      padding: 15px 0;
+      position: absolute;
+      right: -6px;
+      bottom: -6px;
+    }
+
+    &:hover {
+      background-color: #fff;
+      color: #ff2a2a;
+    }
+  }
+}
+
+/*-------------------------------------------
+メインビジュアル
+-------------------------------------------*/
+#main-visual {
+  height: 720px;
+  position: relative;
+  margin-bottom: 120px;
+
+  @media screen and (max-width: 900px) {
+    height: 490px;
+    margin-bottom: 80px;
+  }
+
+  .text {
+    position: absolute;
+    z-index: 10;
+    top: 40%;
+    left: 10%;
+
+    @media screen and (max-width: 900px) {
+      top: 62%;
+      left: 2%;
+      width: 100%;
+    }
+
+    p {
+      font-size: 4.6rem;
+      font-weight: bold;
+      text-shadow: 1px 3px 5px #fff;
+      margin-bottom: 30px;
+
+      @media screen and (max-width: 900px) {
+        font-size: 2.8rem;
+        text-align-last: left;
+        margin-bottom: 10px;
+      }
+    }
+
+    .button {
+      width: 100%;
+      height: 72px;
+      line-height: 72px;
+      text-align: center;
+      font-size: 2.4rem;
+      color: #fff;
+      background-color: #ff2a2a;
+      border-radius: 10px;
+      box-shadow: 0 5px 0 #9a0413;
+      position: relative;
+      transition-duration: 0.5s; /*変化の時間*/
+
+      @media screen and (max-width: 900px) {
+        width: 95%;
+      }
+
+      // ▼ホバーで画像を拡大
+      // 参考：https://kubogen.com/web-programing-212/
+      &:hover {
+        transform: scale(1.1, 1.1); /*画像の拡大*/
+      }
+
+      // ▼くの字の矢印
+      &:after {
+        content: "";
+        position: absolute;
+        top: 25px;
+        right: 30px;
+        width: 20px;
+        height: 20px;
+        border-top: 3px solid #fff;
+        border-right: 3px solid #fff;
+        transform: rotate(45deg);
+        z-index: 40;
+      }
+    }
+  }
+
+  .fade {
+    li {
+      width: 75%;
+      position: absolute;
+      top: 0;
+      right: 0;
+
+      // ▼最初は3枚の画像を透明にする
+      opacity: 0;
+      // ▼アニメーションを無限に実行(fadeの定義は下)
+      animation: fade 15s infinite;
+
+      @media screen and (max-width: 900px) {
+        width: 100%;
+      }
+
+      // ▼画像のフチをぼかす
+      // 参考：http://webrocketsmagazine.com/entry/20120224/css3-image-effects.html
+      &:after {
+        position: absolute;
+        display: block;
+        content: "";
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        box-shadow: inset 0 0 20px #fff /* 背景色と同じ色 */,
+          inset 0 0 20px #fff, inset 0 0 20px #fff, inset 0 0 20px #fff;
+      }
+
+      // ▼1枚目の画像のアニメーション実行タイミングを設定
+      &:nth-child(1) {
+        animation-delay: 0s;
+      }
+
+      // ▼2枚目の画像のアニメーション実行タイミングを設定
+      &:nth-child(2) {
+        animation-delay: 5s;
+      }
+
+      // ▼3枚目の画像のアニメーション実行タイミングを設定
+      &:nth-child(3) {
+        animation-delay: 10s;
+      }
+
+      img {
+        width: 100%;
+        height: 720px;
+        object-fit: cover;
+
+        @media screen and (max-width: 900px) {
+          height: 300px;
+        }
+      }
+    }
+
+    // ▼アニメーション処理
+    // 上の「animation」で15sを指定しているので下記の処理を15秒かけて実行
+    // 0%が0秒を表し、100%が15秒後を表す。
+
+    // 0%の「opacity: 0;」で非表示の状態からスタートし、
+    // 15%になるまでの間に少しづつ画像を表示（フェードイン）させる。
+    // そこから30%の時点までは画像を表示させたままの状態を維持し、
+    // 45%の時点に向けて画像を非表示（フェードアウト）する。
+    // そこから100%まで非表示の状態を維持する。
+    @keyframes fade {
+      0% {
+        opacity: 0;
+      }
+      15% {
+        opacity: 1;
+      }
+      30% {
+        opacity: 1;
+      }
+      45% {
+        opacity: 0;
+      }
+      100% {
+        opacity: 0;
+      }
+    }
+  }
+}
+
+/*-------------------------------------------
+選ばれる理由
+-------------------------------------------*/
+#reason {
+  // ▼sec-titleを中央揃え
+  text-align: center;
+  margin-bottom: 120px;
+
+  @media screen and (max-width: 900px) {
+    margin-bottom: 80px;
+  }
+
+  .back {
+    background-color: #ff2a2a;
+    padding: 80px 0;
+  }
+
+  .inview {
+    display: flex;
+    justify-content: center;
+    opacity: 0;
+
+    img {
+      width: auto;
+      height: 60px;
+      margin-right: 30px;
+    }
+
+    p {
+      text-align: left;
+
+      .title {
+        font-size: 2.8rem;
+        color: #ff2a2a;
+        font-weight: bold;
+
+        @media screen and (max-width: 900px) {
+          font-size: 2.4rem;
+        }
+      }
+
+      .text {
+        font-size: 1.8rem;
+      }
+    }
+  }
+
+  .inview-left,
+  .inview-right {
+    background-color: #fff;
+    width: 50%;
+    padding: 72px;
+    margin-bottom: 40px;
+    opacity: 0;
+
+    @media screen and (max-width: 900px) {
+      width: calc(100% - 16px);
+
+      padding: 21px;
+    }
+  }
+
+  .inview-left {
+    border-radius: 0 20px 20px 0;
+  }
+
+  // slide-left：下で定義している「@keyframes slide-left」を実行
+  // 0.5s：アニメーションが始まってから終わるまでの時間（0.5sかけて実行）
+  // ease-out：アニメーションの変化（開始時は早く、終了時は緩やかに変化）
+  // 0s：アニメーションが始まるまでの時間（0sですぐに実行）
+  // 1：アニメーションの繰り返し回数（1回）
+  // forwards：アニメーション終了時の状態をそのまま維持
+
+  // ▼JSで画面が表示されるタイミングでクラスを追加
+  .slide-left {
+    animation: slide-left 0.5s ease-out 0s 1 forwards;
+
+    //  最初は「translateX(-50%);」で左側に隠しておく
+    // 100%（0.5秒）かけて要素を表示させながら元の位置へ移動させる
+    @keyframes slide-left {
+      0% {
+        transform: translateX(-50%);
+      }
+      100% {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+  }
+
+  .inview-right {
+    border-radius: 20px 0 0 20px;
+    margin-bottom: 0;
+  }
+
+  .slide-right {
+    animation: slide-right 0.5s ease-out 0s 1 forwards;
+
+    @keyframes slide-right {
+      0% {
+        transform: translateX(150%);
+      }
+      100% {
+        opacity: 1;
+        transform: translateX(100%);
+      }
+    }
+
+    @media screen and (max-width: 900px) {
+      @keyframes slide-right {
+        0% {
+          transform: translateX(150%);
+        }
+        100% {
+          opacity: 1;
+          transform: translateX(5%);
+        }
+      }
+    }
+  }
+}
+
+// cssアニメーション参考：
+// https://webdesignday.jp/inspiration/technique/css/5167/
+// https://ics.media/entry/210311/
+
+/*-------------------------------------------
+受講生の声
+-------------------------------------------*/
+#voice {
+  text-align: center;
+  margin-bottom: 120px;
+
+  @media screen and (max-width: 900px) {
+    margin-bottom: 80px;
+  }
+
+  .voices {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .inview-balloon {
+    width: 100%;
+    overflow: hidden;
+    display: flex;
+    margin-bottom: 60px;
+
+    @media screen and (max-width: 900px) {
+      flex-direction: column;
+      margin-bottom: 40px;
+    }
+
+    &:nth-child(2) {
+      flex-direction: row-reverse;
+
+      @media screen and (max-width: 900px) {
+        flex-direction: column;
+      }
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  .faceicon {
+    width: 13%;
+
+    @media screen and (max-width: 900px) {
+      width: 120px;
+      margin: 0 auto;
+      order: 2;
+    }
+
+    img {
+      width: 100%;
+      height: auto;
+      background-color: #c9c9c9;
+      border-radius: 50%;
+      margin-bottom: 10px;
+    }
+
+    p {
+      font-size: 1.2rem;
+      text-align: center;
+    }
+  }
+
+  .chatting {
+    width: 63%;
+    text-align-last: left;
+
+    @media screen and (max-width: 900px) {
+      width: 100%;
+      order: 1;
+      margin-bottom: 30px;
+    }
+  }
+
+  .says {
+    display: inline-block;
+    position: relative;
+    padding: 20px;
+    margin-left: 25px;
+    border-radius: 12px;
+    background: #e5f0fc;
+
+    @media screen and (max-width: 900px) {
+      margin-left: 0;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+
+    &:after {
+      content: "";
+      display: inline-block;
+      position: absolute;
+      top: 80px;
+      left: -24px;
+      border: 12px solid transparent;
+      border-right: 12px solid #e5f0fc;
+
+      @media screen and (max-width: 900px) {
+        top: 100%;
+        left: 48%;
+        border: 15px solid transparent;
+        border-top: 15px solid #e5f0fc;
+      }
+    }
+  }
+
+  .says.right {
+    margin-left: 0;
+    margin-right: 25px;
+
+    &:after {
+      content: "";
+      display: inline-block;
+      position: absolute;
+      top: 80px;
+      left: 100%;
+      border: 12px solid transparent;
+      border-left: 12px solid #e5f0fc;
+
+      @media screen and (max-width: 900px) {
+        top: 100%;
+        left: 48%;
+        border: 15px solid transparent;
+        border-top: 15px solid #e5f0fc;
+      }
+    }
+
+    @media screen and (max-width: 900px) {
+      margin-right: 0;
+    }
+  }
+
+  .balloon {
+    animation: balloon 0.5s ease-out 0s 1 forwards;
+
+    // 最初は「transform: scale(0.1);」で要素を小さくした状態で、
+    // 「opacity: 0;」で非表示にしておく
+    // 0.5秒かけて要素を表示させながら元のサイズへ戻す
+
+    @keyframes balloon {
+      0% {
+        transform: scale(0.1);
+        opacity: 0;
+      }
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+  }
+}
+
+/*-------------------------------------------
+スクールの概要
+-------------------------------------------*/
+#summary {
+  text-align: center;
+  padding: 60px 0;
+  margin-bottom: 120px;
+
+  @media screen and (max-width: 900px) {
+    margin-bottom: 80px;
+  }
+
+  // ▼背景画像を左下に流す
+  // 参考：https://hirashimatakumi.com/blog/4373.html
+  background: url("img/bg.gif") repeat;
+  animation: bgiLoop 10s linear infinite;
+
+  @keyframes bgiLoop {
+    0% {
+      background-position: 0 0;
+    }
+    100% {
+      // ▼画像のサイズに合わせて自然にループさせる
+      background-position: -700px 700px;
+    }
+  }
+
+  ul {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+
+    li {
+      width: 48%;
+      padding: 60px;
+      margin-bottom: 32px;
+      border-radius: 20px;
+      background-color: #fff;
+
+      @media screen and (max-width: 900px) {
+        width: 100%;
+        padding: 30px;
+      }
+    }
+
+    p {
+      text-align: justify;
+    }
+
+    .ja {
+      display: block;
+      font-size: 2.8rem;
+      margin-bottom: 15px;
+      line-height: 1;
+    }
+
+    .en {
+      display: block;
+      font-size: 1.8rem;
+      margin-bottom: 30px;
+    }
+  }
+}
+
+/*-------------------------------------------
+エントリー
+-------------------------------------------*/
+#entry {
+  text-align: center;
+  margin-bottom: 120px;
+
+  @media screen and (max-width: 900px) {
+    margin-bottom: 80px;
+  }
+
+  .title {
+    font-size: 3.2rem;
+    margin-bottom: 5px;
+    font-weight: bold;
+    display: inline-block;
+
+    @media screen and (max-width: 900px) {
+      font-size: 2.4rem;
+      text-align: center;
+    }
+  }
+
+  .catch {
+    font-size: 1.8rem;
+    margin-bottom: 40px;
+    display: inline-block;
+
+    @media screen and (max-width: 900px) {
+      font-size: 1.6rem;
+      text-align: center;
+    }
+  }
+
+  .button2 {
+    width: 100%;
+    height: 72px;
+    line-height: 67px;
+    text-align: center;
+    font-size: 2.8rem;
+    font-weight: bold;
+    color: #fff;
+    background-color: #ff2a2a;
+    border: 3px solid #ff2a2a;
+    border-radius: 40px;
+    transition-duration: 0.5s; /*変化の時間*/
+
+    &:hover {
+      background-color: #fff;
+      color: #ff2a2a;
+    }
+
+    @media screen and (max-width: 900px) {
+      font-size: 2.4rem;
+    }
+  }
+}
+
+/*-------------------------------------------
+フッター
+-------------------------------------------*/
+#footer {
+  padding: 60px 0 20px 0;
+  background-color: #e8e8e8;
+
+  .wrapper {
+    margin-bottom: 60px;
+  }
+
+  .inner {
+    display: flex;
+    justify-content: space-between;
+
+    @media screen and (max-width: 599px) {
+      flex-wrap: wrap;
+      padding: 0 16px 0;
+    }
+
+    .inner2 {
+      width: 25%;
+
+      @media screen and (max-width: 900px) {
+        width: 50%;
+
+        &:nth-child(1),
+        &:nth-child(2) {
+          margin-bottom: 30px;
+        }
+      }
+
+      .title {
+        font-weight: bold;
+
+        @media screen and (max-width: 900px) {
+          font-size: 1.5rem;
+        }
+      }
+    }
+  }
+
+  .footer-menu {
+    li {
+      width: 100%;
+      padding: 10px 0 0 10px;
+    }
+
+    a {
+      color: #333;
+
+      &:hover {
+        color: #a1a0a0;
+        transition: all 0.2s ease;
+      }
+
+      @media screen and (max-width: 900px) {
+        font-size: 1.2rem;
+      }
+    }
+  }
+
+  .copyright {
+    text-align: center;
+    font-size: 1rem;
+  }
+}
